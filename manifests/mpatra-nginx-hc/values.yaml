@@ -1,29 +1,13 @@
-replicaCount: 2
-
-service:
-  type: ClusterIP
-  ports:
-    http: 80
+commonLabels:
+  label-for: demostration-only
 
 ingress:
-  enabled: false
-
-readinessProbe:
   enabled: true
-  httpGet: { path: "/", port: http }
-  initialDelaySeconds: 5
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-
-livenessProbe:
-  enabled: true
-  httpGet: { path: "/", port: http }
-  initialDelaySeconds: 5
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-
-resources:
-  requests: { cpu: 50m, memory: 64Mi }
-  limits:   { cpu: 200m, memory: 256Mi }
+  pathType: Prefix
+  hostname: mpatra-nginx-hc.sctp-sandbox.com
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    external-dns.alpha.kubernetes.io/hostname: "mpatra-nginx-hc.sctp-sandbox.com"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+  ingressClassName: "nginx"
+  tls: true
